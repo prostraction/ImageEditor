@@ -5,11 +5,8 @@
 #endif
 
 #include "GUI/MainApp.h"
-
 IMPLEMENT_APP_NO_MAIN(MyApp);
 //IMPLEMENT_WX_THEME_SUPPORT;
-
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
   wxEntryStart( argc, argv );
