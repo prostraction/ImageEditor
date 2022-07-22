@@ -1,10 +1,10 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 
-class wxImagePanel : public wxPanel {  
+class ImagePanel : public wxPanel {  
 public:
-    wxImagePanel(wxFrame* parent);
-    wxImagePanel(wxFrame* parent, 
+    ImagePanel(wxFrame* parent);
+    ImagePanel(wxFrame* parent, 
                     wxString file, 
                     wxBitmapType format);
 

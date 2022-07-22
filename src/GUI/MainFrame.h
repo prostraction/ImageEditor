@@ -4,9 +4,9 @@
 #endif
 
 #include "ImagePanel.h"
+#include "EditPanel.h"
 
-class MyFrame : public wxFrame
-{
+class MyFrame : public wxFrame {
 public:
     MyFrame(wxWindow *parent, 
             wxWindowID id, 
@@ -23,5 +23,8 @@ private:
         ID_Hello = 1
     };
 
-    wxImagePanel *drawPanel;
+    ImagePanel *imagePanel;
+    EditPanel *editPanel;
+
+    wxBoxSizer* sizer;
 };

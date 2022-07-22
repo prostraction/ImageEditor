@@ -23,10 +23,22 @@ MyFrame::MyFrame(wxWindow *parent,
 
     SetStatusText("Welcome to wxWidgets!");
 
-    // then simply create like this
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    drawPanel = new wxImagePanel(this);// this, wxT("image.jpg"), wxBITMAP_TYPE_JPEG);
-    sizer->Add(drawPanel, 1, wxEXPAND);
+    sizer = new wxBoxSizer(wxHORIZONTAL);
+
+    imagePanel = new ImagePanel(this);// this, wxT("image.jpg"), wxBITMAP_TYPE_JPEG);
+    editPanel = new EditPanel(this);
+
+    sizer->Add(imagePanel, 1, wxEXPAND);
+    //sizer->Add(editPanel, 1, wxEXPAND);
+
+    
+    sizer->Add(
+        editPanel,
+        0,           // make horizontally unstretchable
+        wxALL,       // make border all around (implicit top alignment)
+        10 );        // set border width to 10
+    
+    
     this->SetSizer(sizer);
 
     Bind(wxEVT_MENU, &MyFrame::OnHello, this, 1);
@@ -34,18 +46,15 @@ MyFrame::MyFrame(wxWindow *parent,
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
 }
 
-void MyFrame::OnExit(wxCommandEvent& event)
-{
+void MyFrame::OnExit(wxCommandEvent& event) {
     Close(true);
 }
 
-void MyFrame::OnAbout(wxCommandEvent& event)
-{
+void MyFrame::OnAbout(wxCommandEvent& event) {
     wxMessageBox("This is a wxWidgets Hello World example", "About Hello World", wxOK | wxICON_INFORMATION);
 }
 
-void MyFrame::OnHello(wxCommandEvent& event)
-{
+void MyFrame::OnHello(wxCommandEvent& event) {
     wxFileDialog openFileDialog(this,
                                 _("Open image file"),
                                 "",
@@ -53,10 +62,14 @@ void MyFrame::OnHello(wxCommandEvent& event)
                                 "Image files (*.jpeg;*.jpg)|*.jpeg;*.jpg",
                                 wxFD_OPEN|wxFD_FILE_MUST_EXIST);
 
-    if (openFileDialog.ShowModal() == wxID_CANCEL) {
+    if (openFileDialog.ShowModal() == wxID_CANCEL)
         return;
-    }
-    
-    drawPanel->loadImage(openFileDialog.GetPath(), wxBITMAP_TYPE_JPEG);
 
+    if (!imagePanel->loadImage(openFileDialog.GetPath(), wxBITMAP_TYPE_JPEG)) {
+        wxString error = "Failed to load image:\t" + openFileDialog.GetPath();
+        SetStatusText(_(error));
+    }
+    else {
+        SetStatusText("");
+    }       
 }

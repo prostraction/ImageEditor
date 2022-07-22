@@ -1,48 +1,50 @@
 #include "ImagePanel.h"
 
 
-BEGIN_EVENT_TABLE(wxImagePanel, wxPanel)
-// some useful events
-/*
- EVT_MOTION(wxImagePanel::mouseMoved)
- EVT_LEFT_DOWN(wxImagePanel::mouseDown)
- EVT_LEFT_UP(wxImagePanel::mouseReleased)
- EVT_RIGHT_DOWN(wxImagePanel::rightClick)
- EVT_LEAVE_WINDOW(wxImagePanel::mouseLeftWindow)
- EVT_KEY_DOWN(wxImagePanel::keyPressed)
- EVT_KEY_UP(wxImagePanel::keyReleased)
- EVT_MOUSEWHEEL(wxImagePanel::mouseWheelMoved)
- */
-
-// catch paint events
-EVT_PAINT(wxImagePanel::paintEvent)
-//Size event
-EVT_SIZE(wxImagePanel::onSize)
-EVT_MAXIMIZE(wxImagePanel::maxSize)
+BEGIN_EVENT_TABLE(ImagePanel, wxPanel)
+    // some useful events
+    /*
+    EVT_MOTION(ImagePanel::mouseMoved)
+    EVT_LEFT_DOWN(ImagePanel::mouseDown)
+    EVT_LEFT_UP(ImagePanel::mouseReleased)
+    EVT_RIGHT_DOWN(ImagePanel::rightClick)
+    EVT_LEAVE_WINDOW(ImagePanel::mouseLeftWindow)
+    EVT_KEY_DOWN(ImagePanel::keyPressed)
+    EVT_KEY_UP(ImagePanel::keyReleased)
+    EVT_MOUSEWHEEL(ImagePanel::mouseWheelMoved)
+    */ 
+    // catch paint events
+    EVT_PAINT(ImagePanel::paintEvent)
+    //Size event
+    EVT_SIZE(ImagePanel::onSize)
+    EVT_MAXIMIZE(ImagePanel::maxSize)
 END_EVENT_TABLE()
 
 
 // some useful events
 /*
- void wxImagePanel::mouseMoved(wxMouseEvent& event) {}
- void wxImagePanel::mouseDown(wxMouseEvent& event) {}
- void wxImagePanel::mouseWheelMoved(wxMouseEvent& event) {}
- void wxImagePanel::mouseReleased(wxMouseEvent& event) {}
- void wxImagePanel::rightClick(wxMouseEvent& event) {}
- void wxImagePanel::mouseLeftWindow(wxMouseEvent& event) {}
- void wxImagePanel::keyPressed(wxKeyEvent& event) {}
- void wxImagePanel::keyReleased(wxKeyEvent& event) {}
+ void ImagePanel::mouseMoved(wxMouseEvent& event) {}
+ void ImagePanel::mouseDown(wxMouseEvent& event) {}
+ void ImagePanel::mouseWheelMoved(wxMouseEvent& event) {}
+ void ImagePanel::mouseReleased(wxMouseEvent& event) {}
+ void ImagePanel::rightClick(wxMouseEvent& event) {}
+ void ImagePanel::mouseLeftWindow(wxMouseEvent& event) {}
+ void ImagePanel::keyPressed(wxKeyEvent& event) {}
+ void ImagePanel::keyReleased(wxKeyEvent& event) {}
  */
 
-wxImagePanel::wxImagePanel(wxFrame* parent) : wxPanel(parent){
+ImagePanel::ImagePanel(wxFrame* parent) : wxPanel(parent){
     w = 0;
     h = 0;
     pictureLoaded = false;
 }
 
-wxImagePanel::wxImagePanel(wxFrame* parent, 
+ImagePanel::ImagePanel(wxFrame* parent, 
                             wxString file, 
                             wxBitmapType format) :  wxPanel(parent) {
+    w = 0;
+    h = 0;
+    pictureLoaded = false;
     if (image.LoadFile(file, format)) {
         pictureLoaded = true;
         wxSize size = image.GetSize();
@@ -53,8 +55,7 @@ wxImagePanel::wxImagePanel(wxFrame* parent,
     }
 }
 
-bool wxImagePanel::loadImage(wxString file, 
-                                wxBitmapType format) {
+bool ImagePanel::loadImage(wxString file, wxBitmapType format) {
     if (image.LoadFile(file, format)) {
         pictureLoaded = true;
         wxSize size = image.GetSize();
@@ -67,33 +68,34 @@ bool wxImagePanel::loadImage(wxString file,
     return false;
 }
 
-void wxImagePanel::paintEvent(wxPaintEvent & evt)
-{
+void ImagePanel::paintEvent(wxPaintEvent & evt) {
     // depending on your system you may need to look at double-buffered dcs
     wxPaintDC dc(this);
     render(dc);
 }
 
-void wxImagePanel::paintNow()
-{
+void ImagePanel::paintNow() {
     // depending on your system you may need to look at double-buffered dcs
     wxClientDC dc(this);
     render(dc);
 }
 
-void wxImagePanel::render(wxDC&  dc)
-{
+void ImagePanel::render(wxDC&  dc) {
     if (!pictureLoaded)
         return;
 
     int neww, newh;
     GetClientSize( &neww, &newh );
+
+    if (neww <= 0 || newh <= 0)
+        return;
+
     if (neww > (float)newh * ratio)
         neww = (float)newh * ratio;
     else
         newh = (float)neww / ratio;
        
-    if( ( neww != w || newh != h ) && (neww < (w*zoom) && newh < (h*zoom)) )  {
+    if( ( neww != w || newh != h ) && ( neww < (w*zoom) && newh < (h*zoom) ) )  {
         resized = wxBitmap( image.Scale( neww*zoom, newh*zoom /*, wxIMAGE_QUALITY_HIGH*/ ) );
         dc.DrawBitmap( resized, 0, 0, false );
     } else {
@@ -102,12 +104,12 @@ void wxImagePanel::render(wxDC&  dc)
     }
 }
 
-void wxImagePanel::onSize(wxSizeEvent& event){
+void ImagePanel::onSize(wxSizeEvent& event) {
     Refresh();
     event.Skip();
 }
 
-void wxImagePanel::maxSize(wxMaximizeEvent& event){
+void ImagePanel::maxSize(wxMaximizeEvent& event) {
     Refresh();
     event.Skip();
 }
