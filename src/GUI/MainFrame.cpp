@@ -73,3 +73,9 @@ void MyFrame::OnHello(wxCommandEvent& event) {
         SetStatusText("");
     }       
 }
+
+
+/* Image changes */
+void MyFrame::invokeBrightnessChange(wxCommandEvent &event) {
+    fprintf(stderr, "working %d\n", editPanel->getBrightness());
+}
