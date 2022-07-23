@@ -4,11 +4,17 @@
 class EditPanel : public wxPanel {
 public: 
     EditPanel(wxFrame* parent);
+    int getBrightness() {return brightnessValue;}
 private:
-    wxButton *brightnessButton;
+    wxBoxSizer *verticalSizer;
 
-
-    float brightness;
+    wxStaticText    *brightnessName;
+    wxSlider        *brightnessSlider;
+    wxStaticText    *brightnessValueDisplay;
+    wxBoxSizer      *brightnessSizer;
+    void            displaySliderChanged(wxScrollEvent &event);
+    int             brightnessValue;
+    
 
     void onSize(wxSizeEvent& event);
     void maxSize(wxMaximizeEvent& event);

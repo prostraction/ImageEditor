@@ -19,6 +19,11 @@ private:
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
+    void invokeBrightnessChange(wxCommandEvent &event) {
+        fprintf(stderr, "working %d\n", editPanel->getBrightness());
+        //brightnessName->SetLabel(wxString::Format(wxT("%d"), 2*brightnessValue));
+    }
+
     enum {
         ID_Hello = 1
     };

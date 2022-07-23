@@ -33,7 +33,7 @@ END_EVENT_TABLE()
  void ImagePanel::keyReleased(wxKeyEvent& event) {}
  */
 
-ImagePanel::ImagePanel(wxFrame* parent) : wxPanel(parent){
+ImagePanel::ImagePanel(wxFrame* parent) : wxPanel(parent) {
     w = 0;
     h = 0;
     pictureLoaded = false;
@@ -87,19 +87,20 @@ void ImagePanel::render(wxDC&  dc) {
     int neww, newh;
     GetClientSize( &neww, &newh );
 
-    if (neww <= 0 || newh <= 0)
-        return;
-
     if (neww > (float)newh * ratio)
         neww = (float)newh * ratio;
     else
         newh = (float)neww / ratio;
+
+
+    if (neww <= 0 || newh <= 0)
+        return;
        
     if( ( neww != w || newh != h ) && ( neww < (w*zoom) && newh < (h*zoom) ) )  {
-        resized = wxBitmap( image.Scale( neww*zoom, newh*zoom /*, wxIMAGE_QUALITY_HIGH*/ ) );
+        resized = wxBitmap( image.Scale( neww*zoom, newh*zoom, wxIMAGE_QUALITY_HIGH ) );
         dc.DrawBitmap( resized, 0, 0, false );
     } else {
-        resized = wxBitmap( image.Scale( w*zoom, h*zoom /*, wxIMAGE_QUALITY_HIGH*/ ) );
+        resized = wxBitmap( image.Scale( w*zoom, h*zoom, wxIMAGE_QUALITY_HIGH ) );
         dc.DrawBitmap( resized, 0, 0, false );
     }
 }
