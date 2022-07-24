@@ -14,10 +14,10 @@ void Image::fromBits(uint8_t* bits,
     imageY = _imageY;
     imageBitsOriginal   = (uint8_t*) malloc(imageX * imageY * 3 * sizeof(uint8_t));
     imageBitsModified   = (uint8_t*) malloc(imageX * imageY * 3 * sizeof(uint8_t));
-    imageDCT            = (uint8_t*) malloc(imageX * imageY * 3 * sizeof(uint8_t));
+    imageDCT            = (double*) malloc(imageX * imageY * 3 * sizeof(double));
     memcpy(imageBitsOriginal,   bits, imageX * imageY * 3 * sizeof(uint8_t));
     memset(imageBitsModified,   0, imageX * imageY * 3 * sizeof(uint8_t));
-    memset(imageDCT,            0, imageX * imageY * 3 * sizeof(uint8_t));
+    memset(imageDCT,            0, imageX * imageY * 3 * sizeof(double));
 }
 
 uint8_t* Image::getBitsModified() {
@@ -30,9 +30,9 @@ uint8_t* Image::getBitsOriginal() {
 
 void Image::changeDCT(const int& DCT_Value) {
     for (uint32_t i = 0; i < imageX * imageY * 3; i++) {
-        imageBitsModified[i] = imageBitsOriginal[i] + DCT_Value;
+        imageBitsModified[i] = imageDCT[i] + ((double)DCT_Value/5.d);
     }
-    
+
 }
 
 void Image::doDCT() {
@@ -59,7 +59,7 @@ void Image::doDCTchannel(const int32_t &channels, const int32_t &channelselected
             DCT::doDCT(dct8x8, imageBitsOriginal, x, y, imageX, channels, channelselected);
             for (int32_t i = 0; i < 8; i++) {
                 for (int32_t j = 0; j < 8; j++)
-                    imageBitsOriginal[channelselected + (channels * ((j + x) + imageX * (i+y)))] = dct8x8[8*i + j];
+                    imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] = dct8x8[8*i + j];
             }
         }
     }

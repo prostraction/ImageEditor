@@ -26,5 +26,5 @@ private:
 
     uint8_t* imageBitsOriginal;
     uint8_t* imageBitsModified;
-    uint8_t* imageDCT;
+    double* imageDCT;
 };
