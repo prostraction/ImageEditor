@@ -1,6 +1,8 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 
+#include "../Core/Image.h"
+
 class ImagePanel : public wxPanel {  
 public:
     ImagePanel(wxFrame* parent);

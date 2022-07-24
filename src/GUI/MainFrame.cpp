@@ -25,18 +25,17 @@ MyFrame::MyFrame(wxWindow *parent,
 
     sizer = new wxBoxSizer(wxHORIZONTAL);
 
-    imagePanel = new ImagePanel(this);// this, wxT("image.jpg"), wxBITMAP_TYPE_JPEG);
-    editPanel = new EditPanel(this);
+    imagePanel  = new ImagePanel(this);// this, wxT("image.jpg"), wxBITMAP_TYPE_JPEG);
+    editPanel   = new EditPanel(this);
     editPanel->Bind(wxEVT_SLIDER, &MyFrame::invokeBrightnessChange, this, 10000);
 
     sizer->Add(imagePanel, 1, wxEXPAND);
-    //sizer->Add(editPanel, 1, wxEXPAND);
 
     sizer->Add(
         editPanel,
-        0,           // make horizontally unstretchable
+        0,              // make horizontally unstretchable
         wxEXPAND,       // make border all around (implicit top alignment)
-        10);        // set border width to 10
+        10);            // set border width to 10
     
     
     this->SetSizer(sizer);
@@ -69,9 +68,8 @@ void MyFrame::OnHello(wxCommandEvent& event) {
         wxString error = "Failed to load image:\t" + openFileDialog.GetPath();
         SetStatusText(_(error));
     }
-    else {
-        SetStatusText("");
-    }       
+    else
+        SetStatusText("");    
 }
 
 
