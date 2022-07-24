@@ -30,7 +30,8 @@ uint8_t* Image::getBitsOriginal() {
 
 void Image::changeDCT(const int& DCT_Value) {
     for (uint32_t i = 0; i < imageX * imageY * 3; i++) {
-        imageBitsModified[i] = imageDCT[i] + ((double)DCT_Value/5.d);
+        //if (imageDCT[i] + ((double)DCT_Value/5.d) >= 0.0)
+            imageBitsModified[i] = imageDCT[i] + ((double)DCT_Value/5.d);
     }
 
 }
