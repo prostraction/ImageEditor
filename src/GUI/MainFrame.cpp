@@ -75,5 +75,5 @@ void MyFrame::OnHello(wxCommandEvent& event) {
 
 /* Image changes */
 void MyFrame::invokeBrightnessChange(wxCommandEvent &event) {
-    fprintf(stderr, "working %d\n", editPanel->getBrightness());
+    imagePanel->setBrightness(editPanel->getBrightness());
 }

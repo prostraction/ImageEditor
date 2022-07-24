@@ -37,11 +37,13 @@ ImagePanel::ImagePanel(wxFrame* parent) : wxPanel(parent) {
     w = 0;
     h = 0;
     pictureLoaded = false;
+    img = nullptr;
 }
 
 ImagePanel::ImagePanel(wxFrame* parent, 
                             wxString file, 
                             wxBitmapType format) :  wxPanel(parent) {
+    img = nullptr;
     w = 0;
     h = 0;
     pictureLoaded = false;
@@ -63,6 +65,11 @@ bool ImagePanel::loadImage(wxString file, wxBitmapType format) {
         h = size.GetHeight();
         zoom = 1.0f;
         ratio = float(w) / float(h);
+
+        img = new Image();
+        img->fromBits(image.GetData(), image.GetWidth(), image.GetHeight());
+        img->doDCT();
+
         return true;
     }
     return false;
@@ -113,4 +120,13 @@ void ImagePanel::onSize(wxSizeEvent& event) {
 void ImagePanel::maxSize(wxMaximizeEvent& event) {
     Refresh();
     event.Skip();
+}
+
+void ImagePanel::setBrightness(const int& value) {
+    if (img != nullptr) {
+        img->changeDCT(value);  
+        image.SetData((unsigned char *) img->getBitsModified(), img->getImageX(), img->getImageY(), true);
+        Refresh();
+        fprintf(stderr, "%d\n", value);
+    }
 }

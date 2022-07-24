@@ -8,16 +8,16 @@ Image::Image() {
 }
 
 void Image::fromBits(uint8_t* bits, 
-                        const int32_t &_imageX, 
-                        const int32_t &_imageY) {
+                        const uint32_t &_imageX, 
+                        const uint32_t &_imageY) {
     imageX = _imageX;
     imageY = _imageY;
-    imageBitsOriginal   = new uint8_t(imageX * imageY * 3);
-    imageBitsModified   = new uint8_t(imageX * imageY * 3);
-    imageDCT            = new uint8_t(imageX * imageY * 3);
-    memcpy(imageBitsOriginal,   bits, imageX * imageY * 3);
-    memset(imageBitsModified,   0, imageX * imageY * 3);
-    memset(imageDCT,            0, imageX * imageY * 3);
+    imageBitsOriginal   = (uint8_t*) malloc(imageX * imageY * 3 * sizeof(uint8_t));
+    imageBitsModified   = (uint8_t*) malloc(imageX * imageY * 3 * sizeof(uint8_t));
+    imageDCT            = (uint8_t*) malloc(imageX * imageY * 3 * sizeof(uint8_t));
+    memcpy(imageBitsOriginal,   bits, imageX * imageY * 3 * sizeof(uint8_t));
+    memset(imageBitsModified,   0, imageX * imageY * 3 * sizeof(uint8_t));
+    memset(imageDCT,            0, imageX * imageY * 3 * sizeof(uint8_t));
 }
 
 uint8_t* Image::getBitsModified() {
@@ -29,7 +29,10 @@ uint8_t* Image::getBitsOriginal() {
 }
 
 void Image::changeDCT(const int& DCT_Value) {
-
+    for (uint32_t i = 0; i < imageX * imageY * 3; i++) {
+        imageBitsModified[i] = imageBitsOriginal[i] + DCT_Value;
+    }
+    
 }
 
 void Image::doDCT() {
@@ -56,7 +59,7 @@ void Image::doDCTchannel(const int32_t &channels, const int32_t &channelselected
             DCT::doDCT(dct8x8, imageBitsOriginal, x, y, imageX, channels, channelselected);
             for (int32_t i = 0; i < 8; i++) {
                 for (int32_t j = 0; j < 8; j++)
-                    imageBitsModified[channelselected + (channels * ((j + x) + imageX * (i+y)))] = dct8x8[8*i + j];
+                    imageBitsOriginal[channelselected + (channels * ((j + x) + imageX * (i+y)))] = dct8x8[8*i + j];
             }
         }
     }
@@ -68,4 +71,3 @@ void Image::doDCTchannel(const int32_t &channels, const int32_t &channelselected
 void Image::doIDCT() {
     
 }
-

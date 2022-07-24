@@ -8,13 +8,15 @@ public:
 private:
     wxBoxSizer *verticalSizer;
 
+    wxCheckBox      *rawDCTenabled;
+
     wxStaticText    *brightnessName;
     wxSlider        *brightnessSlider;
     wxStaticText    *brightnessValueDisplay;
     wxBoxSizer      *brightnessSizer;
     void            displaySliderChanged(wxScrollEvent &event);
     int             brightnessValue;
-    
+
 
     void onSize(wxSizeEvent& event);
     void maxSize(wxMaximizeEvent& event);

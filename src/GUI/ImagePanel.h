@@ -17,6 +17,8 @@ public:
     void paintNow();   
     void render(wxDC& dc);
 
+    void setBrightness(const int& value);
+
     void onSize(wxSizeEvent& event);
     void maxSize(wxMaximizeEvent& event);
     
@@ -34,6 +36,8 @@ public:
     
     DECLARE_EVENT_TABLE()
 private:
+    Image* img;
+
     wxImage image;
     wxBitmap resized;
     int w, h;

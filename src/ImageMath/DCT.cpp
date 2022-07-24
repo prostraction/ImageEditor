@@ -27,7 +27,7 @@ void DCT::doDCT(
 
     /* transform rows */
     for (int32_t i = 0; i < 8; i++) {
-        for (int32_t index = 0; index < 8; index) {
+        for (int32_t index = 0; index < 8; index++) {
             x[index] = ImagePixel::GetPixel(Image, XPos+index, YPos+i, ImageWidth, channels, channelselected);
         }
         DCT_1D(x);
