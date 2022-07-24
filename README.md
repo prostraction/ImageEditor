@@ -9,5 +9,5 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 Compilation:
 
 ```
-g++ `find . -name "*.cpp"` `wx-config --cxxflags --libs` -o bin/main && ./bin/main
+g++ -Wall -g `find . -name "*.cpp"` `wx-config --cxxflags --libs` -o bin/main && ./bin/main
 ```
