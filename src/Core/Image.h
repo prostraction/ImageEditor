@@ -15,11 +15,13 @@ public:
     uint32_t getImageY() {return imageY;}
 
     void doDCT();
+    void doIDCT(const int32_t &value);////
     void changeDCT(const int& DCT_Value);
 
 private:
     void doDCTchannel(const int32_t &channels, const int32_t &channelselected);
-    void doIDCT();
+    void doIDCTchannel(const int32_t &channels, const int32_t &channelselected, const int32_t &value);
+    
 
     uint32_t imageX;
     uint32_t imageY;

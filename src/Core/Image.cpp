@@ -31,9 +31,9 @@ uint8_t* Image::getBitsOriginal() {
 void Image::changeDCT(const int& DCT_Value) {
     for (uint32_t i = 0; i < imageX * imageY * 3; i++) {
         //if (imageDCT[i] + ((double)DCT_Value/5.d) >= 0.0)
-            imageBitsModified[i] = imageDCT[i] + ((double)DCT_Value/5.d);
+            //imageBitsModified[i] = imageDCT[i] + ((double)DCT_Value/5.d);
     }
-
+    doIDCT(DCT_Value);
 }
 
 void Image::doDCT() {
@@ -69,6 +69,36 @@ void Image::doDCTchannel(const int32_t &channels, const int32_t &channelselected
     delete[] idct8x8;
 }
 
-void Image::doIDCT() {
+void Image::doIDCT(const int32_t &value) {
+    doIDCTchannel(3, 0, value);
+    doIDCTchannel(3, 1, value);
+    doIDCTchannel(3, 2, value);
+}
+
+void Image::doIDCTchannel(const int32_t &channels, const int32_t &channelselected, const int32_t &value) {
+    if (imageX <= 0 || imageY <= 0)
+        return;
+    if (imageBitsModified == nullptr)
+        return;
+    if (imageDCT == nullptr)
+        return;
+
+    double* dct8x8  = new double[64];
+    double* idct8x8 = new double[64];
+    memset(dct8x8, 0, 64 * sizeof(double));
+    memset(idct8x8, 0, 64 * sizeof(double));
+    //memset(imageBitsModified, 0, imageX * imageY * 3 * sizeof(uint8_t));
     
+    for (uint32_t x = 0; x < imageX - imageX % 8 - 1; x += 8) {
+        for (uint32_t y = 0; y < imageY - imageY % 8 - 1; y += 8) {
+            for (int32_t i = 0; i < 8; i++) {
+                for (int32_t j = 0; j < 8; j++)
+                    dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] + value;
+            }
+            DCT::doIDCT(dct8x8, imageBitsModified, x, y, imageX, channels, channelselected);
+        }
+    }
+
+    delete[] dct8x8;
+    delete[] idct8x8;
 }
