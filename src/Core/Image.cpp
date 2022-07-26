@@ -93,7 +93,22 @@ void Image::doIDCTchannel(const int32_t &channels, const int32_t &channelselecte
         for (uint32_t y = 0; y < imageY - imageY % 8 - 1; y += 8) {
             for (int32_t i = 0; i < 8; i++) {
                 for (int32_t j = 0; j < 8; j++)
-                    dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] + value;
+                    if (i < 2 && j < 2) {
+                        if ((imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d)) <= 13000)
+                            dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 20.d);
+                        else 
+                            dct8x8[8*i + j] = 13000;
+                    }
+
+                    else {
+                        if ((imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d)) <= 1023) {
+                            dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d);
+                        }
+                        else {
+                            dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))];// * ((double)value / 10.d);
+                        }
+                        
+                    }
             }
             DCT::doIDCT(dct8x8, imageBitsModified, x, y, imageX, channels, channelselected);
         }
