@@ -1,4 +1,5 @@
 #include <wx/wx.h>
+#include <wx/grid.h>
 #include <wx/sizer.h>
 
 class EditPanel : public wxPanel {
@@ -9,6 +10,8 @@ private:
     wxBoxSizer *verticalSizer;
 
     wxCheckBox      *rawDCTenabled;
+
+    wxGrid *rawDCTvalues;
 
     wxStaticText    *brightnessName;
     wxSlider        *brightnessSlider;
