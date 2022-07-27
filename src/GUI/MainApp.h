@@ -9,5 +9,5 @@ class MyApp : public wxApp  {
 public:
     virtual bool OnInit();
 private:
-    wxFrame *frame;
+    wxFrame*    frame;
 }; 

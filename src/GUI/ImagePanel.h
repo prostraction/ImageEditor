@@ -38,10 +38,10 @@ public:
 private:
     Image* img;
 
-    wxImage image;
-    wxBitmap resized;
-    int w, h;
-    bool pictureLoaded;
-    float ratio;
-    float zoom; 
+    wxImage     image;
+    wxBitmap    resized;
+    int         w, h;
+    bool        pictureLoaded;
+    float       ratio;
+    float       zoom; 
 };

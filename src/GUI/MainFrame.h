@@ -25,8 +25,8 @@ private:
         ID_Hello = 1
     };
 
-    ImagePanel *imagePanel;
-    EditPanel *editPanel;
+    ImagePanel* imagePanel;
+    EditPanel*  editPanel;
 
     wxBoxSizer* sizer;
 };
