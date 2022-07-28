@@ -95,7 +95,7 @@ void Image::doIDCTchannel(const int32_t &channels, const int32_t &channelselecte
             for (int32_t i = 0; i < 8; i++) {
                 for (int32_t j = 0; j < 8; j++)
                     if (DCT_Matrix != nullptr)
-                        dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * (((double)DCT_Matrix[j + 8 * i] / 5.d) * (double)value);
+                        dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * (((double)DCT_Matrix[j + 8 * i] / 20.d) * (double)value);
                     else {
                         if (i < 2 && j < 2) {
                             if ((imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d)) <= 13000)
