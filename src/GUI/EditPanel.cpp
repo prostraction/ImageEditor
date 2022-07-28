@@ -3,32 +3,33 @@
 
 BEGIN_EVENT_TABLE(EditPanel, wxPanel)
     EVT_COMMAND_SCROLL(10000, EditPanel::displaySliderChanged)
-
-    //Size event
     EVT_SIZE(EditPanel::onSize)
     EVT_MAXIMIZE(EditPanel::maxSize)
+
+#ifdef DEBUG_EDIT
+    EVT_GRID_CELL_CHANGED(EditPanel::rawDCTvaluesGridChanged)
+#endif
 END_EVENT_TABLE()
 
 EditPanel::EditPanel(wxFrame* parent) : wxPanel(parent) { 
     verticalSizer = new wxBoxSizer(wxVERTICAL);
 
-    rawDCTvalues = new wxGrid(this, 9999);
-    rawDCTvalues->CreateGrid(8, 8);
-    rawDCTvalues->HideColLabels();
-    rawDCTvalues->HideRowLabels();
-
+#ifdef DEBUG_EDIT
+    rawDCTvalues = new int[64];
+    memset(rawDCTvalues, 0, 64 * sizeof(int));
+    rawDCTvaluesGrid = new wxGrid(this, 9999);
+    rawDCTvaluesGrid->CreateGrid(8, 8);
+    rawDCTvaluesGrid->HideColLabels();
+    rawDCTvaluesGrid->HideRowLabels();
     for (int i = 0; i < 8; i++) {
-        rawDCTvalues->SetColSize(i, 50);
-    }
-
-    for (int i = 0; i < 8; i++) {
+        rawDCTvaluesGrid->SetColSize(i, 50);
         for (int j = 0; j < 8; j++) {
-            rawDCTvalues->SetCellValue(i, j, wxString::Format(wxT("%i"), 0));
-            rawDCTvalues->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
+            rawDCTvaluesGrid->SetCellValue(i, j, wxString::Format(wxT("%i"), 0));
+            rawDCTvaluesGrid->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
         }
     }
-
-    verticalSizer->Add(rawDCTvalues, 0, wxALL, 20);
+    verticalSizer->Add(rawDCTvaluesGrid, 0, wxALL, 20);
+#endif
 
     brightnessValue = 0;
     brightnessSizer         = new wxBoxSizer(wxHORIZONTAL);
@@ -57,3 +58,19 @@ void EditPanel::displaySliderChanged(wxScrollEvent &event) {
     brightnessValueDisplay->SetLabel(wxString::Format(wxT("%d"), brightnessValue));
     event.Skip();
 }
+
+#ifdef DEBUG_EDIT
+void EditPanel::rawDCTvaluesGridChanged(wxGridEvent& event) {
+    FILE* f = fopen("DCT_DEBUG", "w");
+    if (!f)
+        f = stderr;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            rawDCTvalues[j + i * 8] = wxAtoi(rawDCTvaluesGrid->GetCellValue(i, j));
+            fprintf(f, "%d ", wxAtoi(rawDCTvaluesGrid->GetCellValue(i, j)));
+        }
+        fprintf(f, "\n");
+    }
+    fclose(f);
+}
+#endif
