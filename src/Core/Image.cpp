@@ -94,21 +94,23 @@ void Image::doIDCTchannel(const int32_t &channels, const int32_t &channelselecte
         for (uint32_t y = 0; y < imageY - imageY % 8 - 1; y += 8) {
             for (int32_t i = 0; i < 8; i++) {
                 for (int32_t j = 0; j < 8; j++)
-                    if (i < 2 && j < 2) {
-                        if ((imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d)) <= 13000)
-                            dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 20.d);
-                        else 
-                            dct8x8[8*i + j] = 13000;
-                    }
-
+                    if (DCT_Matrix != nullptr)
+                        dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * (((double)DCT_Matrix[j + 8 * i] / 5.d) * (double)value);
                     else {
-                        if ((imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d)) <= 1023) {
-                            dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d);
+                        if (i < 2 && j < 2) {
+                            if ((imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d)) <= 13000)
+                                dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 20.d);
+                            else 
+                                dct8x8[8*i + j] = 13000;
                         }
                         else {
-                            dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))];// * ((double)value / 10.d);
+                            if ((imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d)) <= 1023) {
+                                dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))] * ((double)value / 10.d);
+                            }
+                            else {
+                                dct8x8[8*i + j] = imageDCT[channelselected + (channels * ((j + x) + imageX * (i+y)))];// * ((double)value / 10.d);
+                            }    
                         }
-                        
                     }
             }
             DCT::doIDCT(dct8x8, imageBitsModified, x, y, imageX, channels, channelselected);
@@ -122,7 +124,6 @@ void Image::doIDCTchannel(const int32_t &channels, const int32_t &channelselecte
 void Image::setCustomDCTMatrix(const int* _DCT_Matrix) {
     DCT_Matrix = new int[64];
     memcpy(DCT_Matrix, _DCT_Matrix, 64 * sizeof(int));
-    fprintf(stderr, "invoked\n\n");
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             fprintf(stderr, "%d ", DCT_Matrix[j + i * 8]);
