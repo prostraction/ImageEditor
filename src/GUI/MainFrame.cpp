@@ -28,6 +28,7 @@ MyFrame::MyFrame(wxWindow *parent,
     imagePanel  = new ImagePanel(this);// this, wxT("image.jpg"), wxBITMAP_TYPE_JPEG);
     editPanel   = new EditPanel(this);
     editPanel->Bind(wxEVT_SLIDER, &MyFrame::invokeBrightnessChange, this, 10000);
+    editPanel->Bind(wxEVT_GRID_CELL_CHANGED, &MyFrame::invokeDCTChange, this, 9999);
 
     sizer->Add(imagePanel, 1, wxEXPAND);
 

@@ -17,6 +17,17 @@ EditPanel::EditPanel(wxFrame* parent) : wxPanel(parent) {
 #ifdef DEBUG_EDIT
     rawDCTvalues = new int[64];
     memset(rawDCTvalues, 0, 64 * sizeof(int));
+    FILE* f = fopen("DCT_DEBUG", "r");
+    if (f) {
+        char buffer[5];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                fscanf(f, "%s", buffer);
+                rawDCTvalues[i + j * 8] = atoi(buffer);
+            }
+        }
+        fclose(f);
+    }
     rawDCTvaluesGrid = new wxGrid(this, 9999);
     rawDCTvaluesGrid->CreateGrid(8, 8);
     rawDCTvaluesGrid->HideColLabels();
@@ -24,7 +35,7 @@ EditPanel::EditPanel(wxFrame* parent) : wxPanel(parent) {
     for (int i = 0; i < 8; i++) {
         rawDCTvaluesGrid->SetColSize(i, 50);
         for (int j = 0; j < 8; j++) {
-            rawDCTvaluesGrid->SetCellValue(i, j, wxString::Format(wxT("%i"), 0));
+            rawDCTvaluesGrid->SetCellValue(i, j, wxString::Format(wxT("%i"), rawDCTvalues[i + j * 8]));
             rawDCTvaluesGrid->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
         }
     }
