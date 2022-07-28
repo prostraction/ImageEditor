@@ -5,10 +5,6 @@ BEGIN_EVENT_TABLE(EditPanel, wxPanel)
     EVT_COMMAND_SCROLL(10000, EditPanel::displaySliderChanged)
     EVT_SIZE(EditPanel::onSize)
     EVT_MAXIMIZE(EditPanel::maxSize)
-
-#ifdef DEBUG_EDIT
-    EVT_GRID_CELL_CHANGED(EditPanel::rawDCTvaluesGridChanged)
-#endif
 END_EVENT_TABLE()
 
 EditPanel::EditPanel(wxFrame* parent) : wxPanel(parent) { 
@@ -23,7 +19,7 @@ EditPanel::EditPanel(wxFrame* parent) : wxPanel(parent) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 fscanf(f, "%s", buffer);
-                rawDCTvalues[i + j * 8] = atoi(buffer);
+                rawDCTvalues[j + i * 8] = atoi(buffer);
             }
         }
         fclose(f);
@@ -35,7 +31,7 @@ EditPanel::EditPanel(wxFrame* parent) : wxPanel(parent) {
     for (int i = 0; i < 8; i++) {
         rawDCTvaluesGrid->SetColSize(i, 50);
         for (int j = 0; j < 8; j++) {
-            rawDCTvaluesGrid->SetCellValue(i, j, wxString::Format(wxT("%i"), rawDCTvalues[i + j * 8]));
+            rawDCTvaluesGrid->SetCellValue(i, j, wxString::Format(wxT("%i"), rawDCTvalues[j + i * 8]));
             rawDCTvaluesGrid->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
         }
     }
@@ -71,7 +67,7 @@ void EditPanel::displaySliderChanged(wxScrollEvent &event) {
 }
 
 #ifdef DEBUG_EDIT
-void EditPanel::rawDCTvaluesGridChanged(wxGridEvent& event) {
+void EditPanel::rawDCTvaluesGridChanged() {
     FILE* f = fopen("DCT_DEBUG", "w");
     if (!f)
         f = stderr;

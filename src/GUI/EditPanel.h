@@ -8,6 +8,12 @@ class EditPanel : public wxPanel {
 public: 
     EditPanel(wxFrame* parent);
     int getBrightness() {return brightnessValue;}
+
+#ifdef DEBUG_EDIT
+    int* getDCTValues() {return rawDCTvalues;}
+    void rawDCTvaluesGridChanged();
+#endif 
+
 private:
     wxBoxSizer*     verticalSizer;
 
@@ -27,10 +33,6 @@ private:
     void onSize(wxSizeEvent& event);
     void maxSize(wxMaximizeEvent& event);
     void displaySliderChanged(wxScrollEvent &event);
-
-#ifdef DEBUG_EDIT
-    void rawDCTvaluesGridChanged(wxGridEvent& event);
-#endif
 
     DECLARE_EVENT_TABLE()
 };

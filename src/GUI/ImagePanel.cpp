@@ -130,3 +130,9 @@ void ImagePanel::setBrightness(const int& value) {
         fprintf(stderr, "%d\n", value);
     }
 }
+
+void ImagePanel::setDCT(const int* DCT_Matrix) {
+    if (img != nullptr) {
+        img->setCustomDCTMatrix(DCT_Matrix);
+    }
+}

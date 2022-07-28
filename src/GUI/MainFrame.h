@@ -21,6 +21,11 @@ private:
 
     void invokeBrightnessChange(wxCommandEvent &event);
 
+#ifdef DEBUG_EDIT
+    void invokeDCTChange(wxGridEvent& event);
+#endif
+
+
     enum {
         ID_Hello = 1
     };

@@ -28,7 +28,9 @@ MyFrame::MyFrame(wxWindow *parent,
     imagePanel  = new ImagePanel(this);// this, wxT("image.jpg"), wxBITMAP_TYPE_JPEG);
     editPanel   = new EditPanel(this);
     editPanel->Bind(wxEVT_SLIDER, &MyFrame::invokeBrightnessChange, this, 10000);
+#ifdef DEBUG_EDIT
     editPanel->Bind(wxEVT_GRID_CELL_CHANGED, &MyFrame::invokeDCTChange, this, 9999);
+#endif
 
     sizer->Add(imagePanel, 1, wxEXPAND);
 
@@ -78,3 +80,11 @@ void MyFrame::OnHello(wxCommandEvent& event) {
 void MyFrame::invokeBrightnessChange(wxCommandEvent &event) {
     imagePanel->setBrightness(editPanel->getBrightness());
 }
+
+#ifdef DEBUG_EDIT
+void MyFrame::invokeDCTChange(wxGridEvent& event) {
+    editPanel->rawDCTvaluesGridChanged();
+    imagePanel->setDCT(editPanel->getDCTValues());
+    imagePanel->setBrightness(editPanel->getBrightness());
+}
+#endif

@@ -18,6 +18,7 @@ public:
     void render(wxDC& dc);
 
     void setBrightness(const int& value);
+    void setDCT(const int* DCT_Matrix);
 
     void onSize(wxSizeEvent& event);
     void maxSize(wxMaximizeEvent& event);
@@ -43,5 +44,5 @@ private:
     int         w, h;
     bool        pictureLoaded;
     float       ratio;
-    float       zoom; 
+    float       zoom;
 };

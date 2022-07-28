@@ -18,6 +18,8 @@ public:
     void doIDCT(const int32_t &value);////
     void changeDCT(const int& DCT_Value);
 
+    void setCustomDCTMatrix(const int* _DCT_Matrix);
+
 private:
     void doDCTchannel(const int32_t &channels, const int32_t &channelselected);
     void doIDCTchannel(const int32_t &channels, const int32_t &channelselected, const int32_t &value);
@@ -29,4 +31,6 @@ private:
     uint8_t* imageBitsOriginal;
     uint8_t* imageBitsModified;
     double* imageDCT;
+
+    int* DCT_Matrix;
 };

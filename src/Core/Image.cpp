@@ -4,6 +4,7 @@ Image::Image() {
     imageBitsOriginal = nullptr;
     imageBitsModified = nullptr;
     imageDCT = nullptr;
+    DCT_Matrix = nullptr;
     imageX = 0; imageY = 0;
 }
 
@@ -116,4 +117,17 @@ void Image::doIDCTchannel(const int32_t &channels, const int32_t &channelselecte
 
     delete[] dct8x8;
     delete[] idct8x8;
+}
+
+void Image::setCustomDCTMatrix(const int* _DCT_Matrix) {
+    DCT_Matrix = new int[64];
+    memcpy(DCT_Matrix, _DCT_Matrix, 64 * sizeof(int));
+    fprintf(stderr, "invoked\n\n");
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            fprintf(stderr, "%d ", DCT_Matrix[j + i * 8]);
+        }
+        fprintf(stderr, "\n");
+        
+    }
 }
