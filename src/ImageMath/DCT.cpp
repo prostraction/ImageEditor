@@ -104,7 +104,10 @@ void DCT::doIDCT(
         IDCT_1D(Column + i*8, Row + i);
 
     for (int32_t i = 0; i < 64; i++) {
-        IDCT_Matrix_out[i] = Clip[Row[i] >> 15];
+        int32_t ClippedRow = Row[i] >> 15;
+        if (ClippedRow > 0 && ClippedRow < 3*256) {
+            IDCT_Matrix_out[i] = Clip[ClippedRow];
+        }
     }
 
     for (int32_t i = 0; i < 8; i++) {
