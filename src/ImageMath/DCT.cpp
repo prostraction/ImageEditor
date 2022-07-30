@@ -27,14 +27,10 @@ void DCT::doDCT(
 
     /* transform rows */
     for (int32_t i = 0; i < 8; i++) {
-        x[0] = ImagePixel::GetPixel(Image, XPos+0, YPos+i, ImageWidth, channels, channelselected);
-        x[1] = ImagePixel::GetPixel(Image, XPos+1, YPos+i, ImageWidth, channels, channelselected);
-        x[2] = ImagePixel::GetPixel(Image, XPos+2, YPos+i, ImageWidth, channels, channelselected);
-        x[3] = ImagePixel::GetPixel(Image, XPos+3, YPos+i, ImageWidth, channels, channelselected);
-        x[4] = ImagePixel::GetPixel(Image, XPos+4, YPos+i, ImageWidth, channels, channelselected);
-        x[5] = ImagePixel::GetPixel(Image, XPos+5, YPos+i, ImageWidth, channels, channelselected);
-        x[6] = ImagePixel::GetPixel(Image, XPos+6, YPos+i, ImageWidth, channels, channelselected);
-        x[7] = ImagePixel::GetPixel(Image, XPos+7, YPos+i, ImageWidth, channels, channelselected);
+
+        for (int32_t index = 0; index < 8; index++) {
+            x[index] = ImagePixel::GetPixel(Image, XPos+index, YPos+i, ImageWidth, channels, channelselected);
+        }
 
         DCT::DCT_1D(x);
         
@@ -50,14 +46,10 @@ void DCT::doDCT(
 
     /* transform columns */
     for (int32_t i = 0; i < 8; i++) {
-        x[0] = rows[0][i];
-        x[1] = rows[1][i];
-        x[2] = rows[2][i];
-        x[3] = rows[3][i];
-        x[4] = rows[4][i];
-        x[5] = rows[5][i];
-        x[6] = rows[6][i];
-        x[7] = rows[7][i];
+
+        for (int32_t index = 0; index < 8; index++) {
+            x[index] = rows[index][i];
+        }
 
         DCT::DCT_1D(x);
 
