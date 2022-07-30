@@ -9,7 +9,7 @@ const int32_t c1 = 1004,
               r2 = 181;
 
 void DCT::doDCT(
-        double *DCT_Matrix,
+        double *DCT_Empty_Matrix,
         const uint8_t *Image,
         const uint32_t &XPos,
         const uint32_t &YPos,
@@ -19,18 +19,25 @@ void DCT::doDCT(
     
     if (!Image)
         return;
-    if (!DCT_Matrix)
-        DCT_Matrix = new double[64];
+    if (!DCT_Empty_Matrix)
+        DCT_Empty_Matrix = new double[64];
 
-    int32_t rows[8][8] {0};
-    int32_t x[9] {0};
+    int32_t rows[8][8];
+    int32_t x[9] = {0};
 
     /* transform rows */
     for (int32_t i = 0; i < 8; i++) {
-        for (int32_t index = 0; index < 8; index++) {
-            x[index] = ImagePixel::GetPixel(Image, XPos+index, YPos+i, ImageWidth, channels, channelselected);
-        }
-        DCT_1D(x);
+        x[0] = ImagePixel::GetPixel(Image, XPos+0, YPos+i, ImageWidth, channels, channelselected);
+        x[1] = ImagePixel::GetPixel(Image, XPos+1, YPos+i, ImageWidth, channels, channelselected);
+        x[2] = ImagePixel::GetPixel(Image, XPos+2, YPos+i, ImageWidth, channels, channelselected);
+        x[3] = ImagePixel::GetPixel(Image, XPos+3, YPos+i, ImageWidth, channels, channelselected);
+        x[4] = ImagePixel::GetPixel(Image, XPos+4, YPos+i, ImageWidth, channels, channelselected);
+        x[5] = ImagePixel::GetPixel(Image, XPos+5, YPos+i, ImageWidth, channels, channelselected);
+        x[6] = ImagePixel::GetPixel(Image, XPos+6, YPos+i, ImageWidth, channels, channelselected);
+        x[7] = ImagePixel::GetPixel(Image, XPos+7, YPos+i, ImageWidth, channels, channelselected);
+
+        DCT::DCT_1D(x);
+        
         rows[i][0] = x[6];
         rows[i][4] = x[4];
         rows[i][2] = x[8] >> 10;
@@ -43,18 +50,25 @@ void DCT::doDCT(
 
     /* transform columns */
     for (int32_t i = 0; i < 8; i++) {
-        for (int index = 0; index < 8; index++) {
-            x[index] = rows[index][i];
-        }
-        DCT_1D(x);
-        DCT_Matrix[i + 8 * 0] = (double)((x[6] + 16) >> 3);
-        DCT_Matrix[i + 8 * 4] = (double)((x[4] + 16) >> 3);
-        DCT_Matrix[i + 8 * 2] = (double)((x[8] + 16384) >> 13);
-        DCT_Matrix[i + 8 * 6] = (double)((x[7] + 16384) >> 13);
-        DCT_Matrix[i + 8 * 7] = (double)((x[2] - x[5] + 16384) >> 13);
-        DCT_Matrix[i + 8 * 1] = (double)((x[2] + x[5] + 16384) >> 13);
-        DCT_Matrix[i + 8 * 3] = (double)(((x[3] >> 8) * r2 + 8192) >> 12);
-        DCT_Matrix[i + 8 * 5] = (double)(((x[0] >> 8) * r2 + 8192) >> 12);
+        x[0] = rows[0][i];
+        x[1] = rows[1][i];
+        x[2] = rows[2][i];
+        x[3] = rows[3][i];
+        x[4] = rows[4][i];
+        x[5] = rows[5][i];
+        x[6] = rows[6][i];
+        x[7] = rows[7][i];
+
+        DCT::DCT_1D(x);
+
+        DCT_Empty_Matrix[i + 8 * 0] = (double)((x[6] + 16) >> 3);
+        DCT_Empty_Matrix[i + 8 * 4] = (double)((x[4] + 16) >> 3);
+        DCT_Empty_Matrix[i + 8 * 2] = (double)((x[8] + 16384) >> 13);
+        DCT_Empty_Matrix[i + 8 * 6] = (double)((x[7] + 16384) >> 13);
+        DCT_Empty_Matrix[i + 8 * 7] = (double)((x[2] - x[5] + 16384) >> 13);
+        DCT_Empty_Matrix[i + 8 * 1] = (double)((x[2] + x[5] + 16384) >> 13);
+        DCT_Empty_Matrix[i + 8 * 3] = (double)(((x[3] >> 8) * r2 + 8192) >> 12);
+        DCT_Empty_Matrix[i + 8 * 5] = (double)(((x[0] >> 8) * r2 + 8192) >> 12);
     }
 }
 void DCT::doIDCT(
@@ -105,9 +119,9 @@ void DCT::doIDCT(
 
     for (int32_t i = 0; i < 64; i++) {
         int32_t ClippedRow = Row[i] >> 15;
-        if (ClippedRow >= 0 && ClippedRow < 3*256) {
+        //if (ClippedRow >= 0 && ClippedRow < 3*256) {
             IDCT_Matrix_out[i] = Clip[ClippedRow];
-        }
+        //}
     }
 
     for (int32_t i = 0; i < 8; i++) {
@@ -138,19 +152,22 @@ void DCT::DCT_1D(int32_t x[9]) {
     x[5] = x[7] + x[6];
     x[7] -= x[6];
     x[6] = c1 * (x[1] + x[2]);
-    x[2] = (-s1 - c1) * x[2] + x[6];
-    x[1] = (s1 - c1) * x[1] + x[6];
+    x[2] = (-s1 -c1) * x[2] + x[6];
+    x[1] = (s1-c1) * x[1] + x[6];
     x[6] = c3 * (x[0] + x[3]);
-    x[3] = (-s3 - c3) * x[3] + x[6];
-    x[0] = (s3 - c3) * x[0] + x[6];
+    x[3] = (-s3-c3) * x[3] + x[6];
+    x[0] = (s3-c3) * x[0] + x[6];
 
     /* Stage 3 */
     x[6] = x[4] + x[5];
     x[4] -= x[5];
     x[5] = r2c6 * (x[7] + x[8]);
-    x[7] = (-r2s6 - r2c6) * x[7] + x[5];
+    x[7] = (-r2s6-r2c6) * x[7] + x[5];
+    x[8] = (r2s6-r2c6) * x[8] + x[5];
+    x[5] = x[0] + x[2];
+    x[0] -= x[2];
+    x[2] = x[3] + x[1];
     x[3] -= x[1];
-    return;
 }
 void DCT::IDCT_1D(int32_t *F, int32_t *f) {
     int32_t p, n;
