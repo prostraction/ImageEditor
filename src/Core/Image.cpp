@@ -141,4 +141,8 @@ void Image::setCustomDCTMatrix(const int* _DCT_Matrix) {
 void Image::doDWT() {
     dwt->doFWT53(imageBitsOriginal);
     memcpy(imageBitsModified, dwt->getAll(), imageX * imageY * 3);
+    for (int i = 0; i < 100; i++) {
+        fprintf(stderr, "%d ", imageBitsModified[i]);
+    }
+    fprintf(stderr, "\n");
 }
