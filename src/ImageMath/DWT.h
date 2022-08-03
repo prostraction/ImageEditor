@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 class DWT {
 public:
@@ -19,6 +20,7 @@ public:
 
 private:
     double* data;
+    double* buffer;
     uint32_t channels;
     uint32_t dataOneChannelSize;
 };
