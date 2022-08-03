@@ -40,6 +40,7 @@ void DWT::doFWT97(const uint8_t* input) {
 
 }
 void DWT::doFWT53(const uint8_t* input) {
+    memcpy(data, input, dataOneChannelSize * channels);
     // P1
     double a = -0.5;
     for (uint32_t i = channels; i < dataOneChannelSize * channels - (2 * channels); i+= 2 * channels) {
@@ -84,6 +85,12 @@ void DWT::doFWT53(const uint8_t* input) {
     for (uint32_t i = 0; i < dataOneChannelSize * channels; i++) {
         data[i] = buffer[i];
     }
+
+    fprintf(stderr, "DWT: \n");
+    for (int i = 0; i < 100; i++) {
+        fprintf(stderr, "%d ", data[i]);
+    }
+    fprintf(stderr, "\n");
 
 }
 
