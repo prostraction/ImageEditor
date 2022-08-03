@@ -2,6 +2,7 @@
 #include <cstring>
 
 #include "../ImageMath/DCT.h"
+#include "../ImageMath/DWT.h"
 
 class Image {
 public:
@@ -18,13 +19,14 @@ public:
     void doIDCT(const int32_t &value);////
     void changeDCT(const int& DCT_Value);
 
+    void doDWT();
+
     void setCustomDCTMatrix(const int* _DCT_Matrix);
 
 private:
     void doDCTchannel(const int32_t &channels, const int32_t &channelselected);
     void doIDCTchannel(const int32_t &channels, const int32_t &channelselected, const int32_t &value);
     
-
     uint32_t imageX;
     uint32_t imageY;
 
@@ -33,4 +35,6 @@ private:
     double* imageDCT;
 
     int* DCT_Matrix;
+
+    DWT *dwt;
 };

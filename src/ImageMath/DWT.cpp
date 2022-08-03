@@ -42,28 +42,28 @@ void DWT::doFWT97(const uint8_t* input) {
 void DWT::doFWT53(const uint8_t* input) {
     // P1
     double a = -0.5;
-    for (int i = channels; i < dataOneChannelSize * channels - (2 * channels); i+= 2 * channels) {
-        for (int j = i; j < channels; j++) {
+    for (uint32_t i = channels; i < dataOneChannelSize * channels - (2 * channels); i+= 2 * channels) {
+        for (uint32_t j = i; j < channels; j++) {
             data[j] += a * (data[j-channels] + data[j+channels]);
         }
     }
-    for (int i = dataOneChannelSize * channels - (2 * channels), j = 1; i < dataOneChannelSize * channels; i++, j += 2) {
+    for (uint32_t i = dataOneChannelSize * channels - (2 * channels), j = 1; i < dataOneChannelSize * channels; i++, j += 2) {
         data[i] += 2 * a * data[i-j];
     }
     // U1
     a = 0.25;
-    for (int i = 2 * channels; i < dataOneChannelSize * channels; i += 2 * channels) {
-        for (int j = i; j < channels; j++) {
+    for (uint32_t i = 2 * channels; i < dataOneChannelSize * channels; i += 2 * channels) {
+        for (uint32_t j = i; j < channels; j++) {
             data[j] += a * (data[j-channels] + data[j+channels]);
         }
     }
-    for (int i = 0; i < channels; i++) {
+    for (uint32_t i = 0; i < channels; i++) {
         data[i] += 2 * a * data[i + channels];
     }
 
     // S
     a = sqrt(2.d);
-    for (int i = 0; i < dataOneChannelSize * channels; i++) {
+    for (uint32_t i = 0; i < dataOneChannelSize * channels; i++) {
         if (i % 2 == 1) {
             data[i] *= a;
         }
@@ -73,7 +73,7 @@ void DWT::doFWT53(const uint8_t* input) {
     }
 
     // Pack
-    for (int i = 0; i < dataOneChannelSize * channels; i++) {
+    for (uint32_t i = 0; i < dataOneChannelSize * channels; i++) {
         if (i % 2 == 0) {
             buffer[i/2] = data[i];
         }
@@ -81,8 +81,18 @@ void DWT::doFWT53(const uint8_t* input) {
             buffer[(dataOneChannelSize * channels) / 2 + i / 2] = data[i];
         }
     }
-    for (int i = 0; i < dataOneChannelSize * channels; i++) {
+    for (uint32_t i = 0; i < dataOneChannelSize * channels; i++) {
         data[i] = buffer[i];
     }
 
+}
+
+uint8_t* DWT::getAll() {
+    return (uint8_t*) data;
+}
+uint8_t* DWT::getHighFreq() {
+    return (uint8_t*) data;
+}
+uint8_t* DWT::getLowFreq() {
+    return (uint8_t*) data;
 }

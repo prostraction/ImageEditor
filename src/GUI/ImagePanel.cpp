@@ -69,6 +69,11 @@ bool ImagePanel::loadImage(wxString file, wxBitmapType format) {
         img = new Image();
         img->fromBits(image.GetData(), image.GetWidth(), image.GetHeight());
         img->doDCT();
+        // temp
+        img->doDWT();
+        image.SetData((unsigned char *) img->getBitsModified(), img->getImageX(), img->getImageY(), true);
+        Refresh();
+
 
         return true;
     }
