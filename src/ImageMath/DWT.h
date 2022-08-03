@@ -20,6 +20,9 @@ public:
     uint8_t* getLowFreq();
 
 private:
+    void RowFWT53();
+    void ColumnFWT53();
+
     double* data;
     double* buffer;
     uint32_t channels;

@@ -10,7 +10,7 @@ DWT::DWT(const uint32_t &_channels, const uint32_t &_dataOneChannelSize) {
     channels = _channels;
     dataOneChannelSize = _dataOneChannelSize;
     data = (double*)malloc(channels * dataOneChannelSize * sizeof(double));
-    buffer = (double*)malloc(2 * channels * dataOneChannelSize * sizeof(double));
+    buffer = (double*)malloc(channels * dataOneChannelSize * sizeof(double));
 }
 DWT::~DWT() {
     if (data)
@@ -25,7 +25,7 @@ void DWT::setDataOneChannelSize(const uint32_t &_dataOneChannelSize) {
 void DWT::allocData() {
     if (data == nullptr) {
         data = (double*)malloc(channels * dataOneChannelSize * sizeof(double));
-        buffer = (double*)malloc(2 * channels * dataOneChannelSize * sizeof(double));
+        buffer = (double*)malloc(channels * dataOneChannelSize * sizeof(double));
     }
 }
 void DWT::freeData() {
@@ -74,6 +74,7 @@ void DWT::doFWT53(const uint8_t* input) {
     }
 
     // Pack
+    /*
     for (uint32_t i = 0; i < dataOneChannelSize * channels; i++) {
         if (i % 2 == 0) {
             buffer[i/2] = data[i];
@@ -91,6 +92,7 @@ void DWT::doFWT53(const uint8_t* input) {
         fprintf(stderr, "%d ", data[i]);
     }
     fprintf(stderr, "\n");
+    */
 
 }
 
