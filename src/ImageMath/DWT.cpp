@@ -2,7 +2,8 @@
 
 DWT::DWT() {
     data = nullptr;
-    buffer = nullptr;
+    bufferX = nullptr;
+    bufferY = nullptr;
     channels = 0;
     x = 0; y = 0;
 }
@@ -11,7 +12,8 @@ DWT::DWT(const uint32_t &_channels, const uint32_t &ImageX, const uint32_t &Imag
     x = ImageX;
     y = ImageY;
     data = (double*)malloc(channels * x * y * sizeof(double));
-    buffer = (double*)malloc(channels * x * y * sizeof(double));
+    bufferX = (double*)malloc(channels * x * sizeof(double));
+    bufferY = (double*)malloc(channels * y * sizeof(double));
     dataImage = (uint8_t*)malloc(channels * x * y * sizeof(uint8_t));
 }
 DWT::~DWT() {
@@ -30,16 +32,18 @@ void DWT::setY(const uint32_t &ImageY) {
 void DWT::allocData() {
     if (data == nullptr) {
         data = (double*)malloc(channels * x * y * sizeof(double));
-        buffer = (double*)malloc(channels * x * y * sizeof(double));
+        bufferX = (double*)malloc(channels * x * sizeof(double));
+        bufferY = (double*)malloc(channels * y * sizeof(double));
         dataImage = (uint8_t*)malloc(channels * x * y * sizeof(uint8_t));
     }
 }
 void DWT::freeData() {
     if (data) {
         free(data);
-        free(buffer);
+        free(bufferX);
         data = nullptr;
-        buffer = nullptr;
+        bufferX = nullptr;
+        bufferY = nullptr;
     }
 }
 void DWT::doFWT97(const uint8_t* input) {
@@ -49,35 +53,17 @@ void DWT::doFWT53(const uint8_t* input) {
     for (uint32_t i = 0; i < x*y*channels; i++) {
         data[i] = (double)input[i];
     }
-    double a = -0.5;
-    for (uint32_t i = channels; i < x * y * channels - (2 * channels); i+= 2 * channels) {
-        for (uint32_t j = i; j < channels; j++) {
-            data[j] += a * (data[j-channels] + data[j+channels]);
-        }
-    }
-    for (uint32_t i = x * y * channels - (2 * channels), j = 1; i < x * y * channels; i++, j += 2) {
-        data[i] += 2 * a * data[i-j];
-    }
-    // U1
-    a = 0.25;
-    for (uint32_t i = 2 * channels; i < x * y * channels; i += 2 * channels) {
-        for (uint32_t j = i; j < channels; j++) {
-            data[j] += a * (data[j-channels] + data[j+channels]);
-        }
-    }
-    for (uint32_t i = 0; i < channels; i++) {
-        data[i] += 2 * a * data[i + channels];
-    }
 
-    // S
-    a = sqrt(2.d);
-    for (uint32_t i = 0; i < x * y * channels; i++) {
-        if (i % 2 == 1) {
-            data[i] *= a;
-        }
-        else {
-            data[i] /= a;
-        }
+    for (uint32_t i = 0; i < y; i++) {
+        memcpy(bufferX, data+(i*x*channels), x*channels * sizeof(double));
+        RowFWT53(bufferX);
+        memcpy(data+(i*x*channels), bufferX, x*channels * sizeof(double));
+    }
+    
+    for (uint32_t i = 0; i < x; i++) {
+        getColumn(bufferY, i);
+        //RowFWT53(bufferY);
+
     }
     
 
@@ -174,4 +160,47 @@ uint8_t* DWT::getLowFreq() {
         dataImage[i] = (uint8_t)data[i];
     }
     return dataImage;
+}
+
+void DWT::getColumn(double* selectedData, const uint32_t &selectedX) {
+    //channelselected + (channels * (x + (y * Width)))
+    for (uint32_t i = 0; i < y * 1.2; i++) {
+        for (uint32_t j = 0; j < channels; j++) {
+            data[j + (channels * (selectedX + (i * y)))] = 0;
+            //selectedData[channels * i + j] = data[j + (channels * (selectedX + (i * y)))];
+        }
+    }
+}
+
+void DWT::RowFWT53(double* selectedData) {
+    double a = -0.5;
+    for (uint32_t i = channels; i < x * channels - (2 * channels); i+= 2 * channels) {
+        for (uint32_t j = i; j < channels; j++) {
+            selectedData[j] += a * (selectedData[j-channels] + selectedData[j+channels]);
+        }
+    }
+    for (uint32_t i = x * channels - (2 * channels), j = 1; i < x * channels; i++, j += 2) {
+        selectedData[i] += 2 * a * selectedData[i-j];
+    }
+    // U1
+    a = 0.25;
+    for (uint32_t i = 2 * channels; i < x * channels; i += 2 * channels) {
+        for (uint32_t j = i; j < channels; j++) {
+            selectedData[j] += a * (selectedData[j-channels] + selectedData[j+channels]);
+        }
+    }
+    for (uint32_t i = 0; i < channels; i++) {
+        selectedData[i] += 2 * a * selectedData[i + channels];
+    }
+
+    // S
+    a = sqrt(2.);
+    for (uint32_t i = 0; i < x * channels; i++) {
+        if (i % 2 == 1) {
+            selectedData[i] *= a;
+        }
+        else {
+            selectedData[i] /= a;
+        }
+    }
 }

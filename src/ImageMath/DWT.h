@@ -22,11 +22,12 @@ public:
     uint8_t* getLowFreq();
 
 private:
-    void RowFWT53();
-    void ColumnFWT53();
+    void RowFWT53(double* selectedData);
+    void getColumn(double* selectedData, const uint32_t &selectedX);
 
     double* data;
-    double* buffer;
+    double* bufferX;
+    double* bufferY;
     uint8_t* dataImage;
     uint32_t channels;
     //uint32_t dataOneChannelSize;
