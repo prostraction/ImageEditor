@@ -1,15 +1,17 @@
 #include <iostream>
 #include <cmath>
 #include <cstring>
+#include <algorithm>
 
 class DWT {
 public:
     DWT();
-    DWT(const uint32_t &_channels, const uint32_t &_dataOneChannelSize);
+    DWT(const uint32_t &_channels, const uint32_t &ImageX, const uint32_t &ImageY);
     ~DWT();
 
     void setChannels(const uint32_t &_channels);
-    void setDataOneChannelSize(const uint32_t &_dataOneChannelSize);
+    void setX(const uint32_t &ImageX);
+    void setY(const uint32_t &ImageY);
     void allocData();
     void freeData();
     void doFWT97(const uint8_t* input);
@@ -25,6 +27,8 @@ private:
 
     double* data;
     double* buffer;
+    uint8_t* dataImage;
     uint32_t channels;
-    uint32_t dataOneChannelSize;
+    //uint32_t dataOneChannelSize;
+    uint32_t x; uint32_t y;
 };

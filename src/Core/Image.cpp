@@ -19,8 +19,8 @@ void Image::fromBits(uint8_t* bits,
     memcpy(imageBitsOriginal,   bits, imageX * imageY * 3 * sizeof(uint8_t));
     memset(imageBitsModified,   0, imageX * imageY * 3 * sizeof(uint8_t));
     memset(imageDCT,            0, imageX * imageY * 3 * sizeof(double));
-
-    dwt = new DWT(3, imageX * imageY);
+    
+    dwt = new DWT(3, imageX, imageY);
 }
 
 uint8_t* Image::getBitsModified() {
