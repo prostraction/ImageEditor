@@ -49,6 +49,16 @@ void DWT::freeData() {
 void DWT::doFWT97(const uint8_t* input) {
 
 }
+
+void DWT::scaleDataValue(const double &modifier) {
+    // channelselected + (channels * (x + (y * Width)))
+    for (uint32_t i = 0; i < y/2; i++) {
+        for (uint32_t j = 0; j < x*channels/2; j++) {
+            data[j + i*x*channels] *= modifier;
+        }
+    }
+}
+
 void DWT::doFWT53_2D(const uint8_t* input) {
     for (uint32_t i = 0; i < x*y*channels; i++) {
         data[i] = (double)input[i];
