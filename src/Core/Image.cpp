@@ -145,6 +145,6 @@ void Image::doDWT() {
         fprintf(stderr, "%d ", imageBitsModified[i]);
     }
     fprintf(stderr, "\n");
-    dwt->doIWT53_2D(imageBitsModified);
+    dwt->doIWT53_2D(dwt->getData());
     memcpy(imageBitsModified, dwt->getAll(), imageX * imageY * 3);
 }

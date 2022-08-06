@@ -68,12 +68,13 @@ void DWT::doFWT53_2D(const uint8_t* input) {
     }
 }
 
-void DWT::doIWT53_2D(const uint8_t* input) {
+void DWT::doIWT53_2D(const double* input) {
     /*
     for (uint32_t i = 0; i < x*y*channels; i++) {
         data[i] = (double)input[i];
     }
     */
+    memcpy(data, input, channels*x*y*sizeof(double));
 
     for (uint32_t i = 0; i < x; i++) {
         getDataColumn(bufferY, i);
@@ -93,6 +94,10 @@ uint8_t* DWT::getAll() {
         dataImage[i] = (uint8_t)data[i];
     }
     return dataImage;
+}
+
+double* DWT::getData() {
+    return data;
 }
 uint8_t* DWT::getHighFreq() {
     for (uint32_t i = 0; i < x * y * 3; i++) {

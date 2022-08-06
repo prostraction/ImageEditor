@@ -16,9 +16,10 @@ public:
     void freeData();
     void doFWT97(const uint8_t* input);
     void doFWT53_2D(const uint8_t* input);
-    void doIWT53_2D(const uint8_t* input);
+    void doIWT53_2D(const double* input);
 
     uint8_t* getAll();
+    double* getData();
     uint8_t* getHighFreq();
     uint8_t* getLowFreq();
 
