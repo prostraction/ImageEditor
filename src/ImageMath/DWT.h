@@ -22,8 +22,9 @@ public:
     uint8_t* getLowFreq();
 
 private:
-    void RowFWT53(double* selectedData);
+    void FWT53_1D(double* selectedData, const uint32_t &length);
     void getColumn(double* selectedData, const uint32_t &selectedX);
+    void setColumn(double* selectedData, const uint32_t &selectedX);
 
     double* data;
     double* bufferX;
