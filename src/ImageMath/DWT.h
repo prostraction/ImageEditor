@@ -15,7 +15,8 @@ public:
     void allocData();
     void freeData();
     void doFWT97(const uint8_t* input);
-    void doFWT53(const uint8_t* input);
+    void doFWT53_2D(const uint8_t* input);
+    void doIWT53_2D(const uint8_t* input);
 
     uint8_t* getAll();
     uint8_t* getHighFreq();
@@ -23,14 +24,14 @@ public:
 
 private:
     void FWT53_1D(double* selectedData, const uint32_t &length);
-    void getColumn(double* selectedData, const uint32_t &selectedX);
-    void setColumn(double* selectedData, const uint32_t &selectedX);
+    void IWT53_1D(double* selectedData, const uint32_t &length);
+    void getDataColumn(double* selectedData, const uint32_t &selectedX);
+    void setDataColumn(double* selectedData, const uint32_t &selectedX);
 
     double* data;
     double* bufferX;
     double* bufferY;
     uint8_t* dataImage;
     uint32_t channels;
-    //uint32_t dataOneChannelSize;
     uint32_t x; uint32_t y;
 };

@@ -19,7 +19,7 @@ void Image::fromBits(uint8_t* bits,
     memcpy(imageBitsOriginal,   bits, imageX * imageY * 3 * sizeof(uint8_t));
     memset(imageBitsModified,   0, imageX * imageY * 3 * sizeof(uint8_t));
     memset(imageDCT,            0, imageX * imageY * 3 * sizeof(double));
-    
+
     dwt = new DWT(3, imageX, imageY);
 }
 
@@ -139,10 +139,12 @@ void Image::setCustomDCTMatrix(const int* _DCT_Matrix) {
 }
 
 void Image::doDWT() {
-    dwt->doFWT53(imageBitsOriginal);
+    dwt->doFWT53_2D(imageBitsOriginal);
     memcpy(imageBitsModified, dwt->getAll(), imageX * imageY * 3);
     for (int i = 0; i < 100; i++) {
         fprintf(stderr, "%d ", imageBitsModified[i]);
     }
     fprintf(stderr, "\n");
+    dwt->doIWT53_2D(imageBitsModified);
+    memcpy(imageBitsModified, dwt->getAll(), imageX * imageY * 3);
 }
